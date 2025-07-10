@@ -1,13 +1,12 @@
-package net.tracystacktrace.mamasrecipes.constructor;
+package net.tracystacktrace.mamasrecipes.constructor.item;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.tracystacktrace.mamasrecipes.bridge.ILocalization;
 import net.tracystacktrace.mamasrecipes.bridge.MainBridge;
-import net.tracystacktrace.mamasrecipes.tools.RecipeProcessException;
+import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemDescription {
@@ -113,7 +112,7 @@ public class ItemDescription {
             final JsonElement dnElement = object.get("displayName");
             final String dnExtracted = SafeExtractor.extractString(dnElement);
 
-            if(dnExtracted != null) {
+            if (dnExtracted != null) {
                 instance.displayName = dnExtracted;
             } else {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_DISPLAY_NAME, dnElement.toString());

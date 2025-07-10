@@ -2,9 +2,9 @@ package net.tracystacktrace.mamasrecipes.constructor.recipe;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.tracystacktrace.mamasrecipes.constructor.ItemDescription;
-import net.tracystacktrace.mamasrecipes.constructor.KeyedItemDescription;
-import net.tracystacktrace.mamasrecipes.tools.RecipeProcessException;
+import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
+import net.tracystacktrace.mamasrecipes.constructor.item.KeyedItemDescription;
+import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +58,7 @@ public class RecipeShaped implements IRecipeDescription {
 
     public static @NotNull RecipeShaped fromJson(@NotNull JsonObject object) throws RecipeProcessException {
         //general checks
-        if(!SafeExtractor.assertRecipeType(object, "crafting_shaped")) {
+        if (!SafeExtractor.assertRecipeType(object, "crafting_shaped")) {
             throw new RecipeProcessException(RecipeProcessException.INCORRECT_RECIPE_TYPE, object.has("type") ? object.get("type").toString() : null);
         }
 
@@ -107,16 +107,16 @@ public class RecipeShaped implements IRecipeDescription {
             build_keys = collector.isEmpty() ? null : collector;
         }
 
-        if(build_keys == null) {
+        if (build_keys == null) {
             throw new RecipeProcessException(RecipeProcessException.RECIPE_KEYS_NOT_FOUND);
         }
 
         //build result item
         ItemDescription build_result = null;
 
-        if(object.has("result")) {
+        if (object.has("result")) {
             final JsonElement resultElement = object.get("result");
-            if(!resultElement.isJsonObject()) {
+            if (!resultElement.isJsonObject()) {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_RESULT, resultElement.toString());
             }
 
@@ -127,7 +127,7 @@ public class RecipeShaped implements IRecipeDescription {
             }
         }
 
-        if(build_result == null) {
+        if (build_result == null) {
             throw new RecipeProcessException(RecipeProcessException.RECIPE_RESULT_NOT_FOUND);
         }
 
@@ -135,11 +135,11 @@ public class RecipeShaped implements IRecipeDescription {
         final RecipeShaped instance = new RecipeShaped(build_pattern, build_keys, build_result);
 
         //additional support for names, just for fun!
-        if(object.has("name")) {
+        if (object.has("name")) {
             final JsonElement nameElement = object.get("name");
             final String nameExtracted = SafeExtractor.extractString(nameElement);
 
-            if(nameExtracted != null) {
+            if (nameExtracted != null) {
                 instance.name = nameExtracted;
             }
         }

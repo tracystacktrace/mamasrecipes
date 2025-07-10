@@ -2,8 +2,8 @@ package net.tracystacktrace.mamasrecipes.constructor.recipe;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.tracystacktrace.mamasrecipes.constructor.ItemDescription;
-import net.tracystacktrace.mamasrecipes.tools.RecipeProcessException;
+import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
+import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,21 +49,21 @@ public class RecipeFurnace implements IRecipeDescription {
     }
 
     public static @NotNull RecipeFurnace fromJson(@NotNull JsonObject object, @Nullable String type) throws RecipeProcessException {
-         if(type == null || type.isEmpty()) {
-             type = "furnace"; //dumb protection
-         }
+        if (type == null || type.isEmpty()) {
+            type = "furnace"; //dumb protection
+        }
 
         //general checks
-        if(!SafeExtractor.assertRecipeType(object, type)) {
+        if (!SafeExtractor.assertRecipeType(object, type)) {
             throw new RecipeProcessException(RecipeProcessException.INCORRECT_RECIPE_TYPE, object.has("type") ? object.get("type").toString() : null);
         }
 
         //build input item
         ItemDescription build_input = null;
 
-        if(object.has("input")) {
+        if (object.has("input")) {
             final JsonElement inputElement = object.get("input");
-            if(!inputElement.isJsonObject()) {
+            if (!inputElement.isJsonObject()) {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_RESULT, inputElement.toString());
             }
 
@@ -74,16 +74,16 @@ public class RecipeFurnace implements IRecipeDescription {
             }
         }
 
-        if(build_input == null) {
+        if (build_input == null) {
             throw new RecipeProcessException(RecipeProcessException.RECIPE_RESULT_NOT_FOUND);
         }
 
         //build result item
         ItemDescription build_result = null;
 
-        if(object.has("result")) {
+        if (object.has("result")) {
             final JsonElement resultElement = object.get("result");
-            if(!resultElement.isJsonObject()) {
+            if (!resultElement.isJsonObject()) {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_RESULT, resultElement.toString());
             }
 
@@ -94,18 +94,18 @@ public class RecipeFurnace implements IRecipeDescription {
             }
         }
 
-        if(build_result == null) {
+        if (build_result == null) {
             throw new RecipeProcessException(RecipeProcessException.RECIPE_RESULT_NOT_FOUND);
         }
 
         final RecipeFurnace instance = new RecipeFurnace(build_input, build_result, type);
 
         //additional support for names, just for fun!
-        if(object.has("name")) {
+        if (object.has("name")) {
             final JsonElement nameElement = object.get("name");
             final String nameExtracted = SafeExtractor.extractString(nameElement);
 
-            if(nameExtracted != null) {
+            if (nameExtracted != null) {
                 instance.name = nameExtracted;
             }
         }

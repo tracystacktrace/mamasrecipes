@@ -10,9 +10,9 @@ public final class MainBridge {
     }
 
     public static @NotNull ILocalization getLocalization() {
-        if(localization == null) {
+        if (localization == null) {
             throw new RuntimeException("Localization is not initialized!");
         }
-       return localization;
+        return localization;
     }
 }

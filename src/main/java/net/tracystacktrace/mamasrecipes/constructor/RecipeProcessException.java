@@ -1,4 +1,4 @@
-package net.tracystacktrace.mamasrecipes.tools;
+package net.tracystacktrace.mamasrecipes.constructor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +20,7 @@ public class RecipeProcessException extends Exception {
     public static final byte RECIPE_KEYS_NOT_FOUND = -118;
     public static final byte INVALID_RECIPE_RESULT = -117;
     public static final byte RECIPE_RESULT_NOT_FOUND = -116;
+    public static final byte INVALID_RECIPE_TYPE = -115;
 
     public static @NotNull String getMessage(byte code, @Nullable String optional) {
         switch (code) {
@@ -34,7 +35,7 @@ public class RecipeProcessException extends Exception {
                 return String.format("Invalid item meta: %s", optional);
             case INVALID_ITEM_DISPLAY_NAME:
                 return String.format("Invalid item display name: %s", optional);
-                //recipes builder
+            //recipes builder
             case INCORRECT_RECIPE_TYPE:
                 return String.format("Incorrect recipe type! Received: %s", optional);
             case INVALID_RECIPE_PATTERN:
@@ -51,7 +52,9 @@ public class RecipeProcessException extends Exception {
                 return String.format("Invalid recipe result: %s", optional);
             case RECIPE_RESULT_NOT_FOUND:
                 return "A recipe result was expected, but not found!";
-                //default
+            case INVALID_RECIPE_TYPE:
+                return String.format("Invalid recipe type: %s", optional);
+            //default
             default:
                 return "Unknown error!";
         }

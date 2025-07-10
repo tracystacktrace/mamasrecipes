@@ -1,8 +1,8 @@
-package net.tracystacktrace.mamasrecipes.constructor;
+package net.tracystacktrace.mamasrecipes.constructor.item;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.tracystacktrace.mamasrecipes.tools.RecipeProcessException;
+import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ public class KeyedItemDescription extends ItemDescription {
         if (object.has("key")) {
             final JsonElement keyElement = object.get("key");
             final String keyExtracted = SafeExtractor.extractString(keyElement);
-            if(keyExtracted != null && !keyExtracted.isEmpty()) {
+            if (keyExtracted != null && !keyExtracted.isEmpty()) {
                 instance.recipeKeyIdentifier = keyExtracted;
             } else {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_KEY, keyElement.toString());
