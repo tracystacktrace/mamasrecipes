@@ -109,7 +109,7 @@ public class ItemDescription {
         final ItemDescription instance = new ItemDescription(build_itemID, build_count, build_meta);
 
         //additional support for ReIndev's displayName
-        if (object.has("displayName") && localizer.supportsDisplayNames()) {
+        if (object.has("displayName") && localizer.supportsAttribute("displayName")) {
             final JsonElement dnElement = object.get("displayName");
             final String dnExtracted = SafeExtractor.extractString(dnElement);
 

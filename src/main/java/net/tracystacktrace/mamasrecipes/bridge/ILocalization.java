@@ -7,8 +7,6 @@ import org.jetbrains.annotations.Nullable;
 public interface ILocalization {
     /* general handlers */
 
-    boolean supportsDisplayNames();
-
     @Nullable Integer getIDFromName(@NotNull String name);
 
     boolean isValidItemID(int id);
@@ -18,4 +16,7 @@ public interface ILocalization {
     String[] getAvailableTypes();
 
     void addRecipe(@NotNull IRecipeDescription recipe);
+
+    /* specific attributes */
+    boolean supportsAttribute(@NotNull String attribute);
 }

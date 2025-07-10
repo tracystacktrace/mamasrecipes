@@ -1,0 +1,13 @@
+{
+	"type": "furnace",
+	"name": "Test 1",
+	"input": {
+		"item": "item.coal",
+		"meta": 0
+	},
+	"result": {
+		"item": "item.coal",
+		"displayName": "Super Coal",
+		"meta": 0
+	}
+}
