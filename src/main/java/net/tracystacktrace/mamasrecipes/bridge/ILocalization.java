@@ -1,6 +1,7 @@
 package net.tracystacktrace.mamasrecipes.bridge;
 
 import com.google.gson.JsonObject;
+import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,5 +25,5 @@ public interface ILocalization {
 
     String[] getCustomRecipeTypes();
 
-    IRecipeDescription processCustomRecipe(JsonObject object);
+    IRecipeDescription processCustomRecipe(JsonObject object) throws RecipeProcessException;
 }

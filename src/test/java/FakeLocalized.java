@@ -1,0 +1,54 @@
+import com.google.gson.JsonObject;
+import net.tracystacktrace.mamasrecipes.bridge.ILocalization;
+import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
+import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
+import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public final class FakeLocalized implements ILocalization {
+    public static final int DIAMOND_SWORD = 1;
+    public static final int COAL = 2;
+    public static final int STICK = 3;
+    public static final int IRON_PICKAXE = 4;
+    public static final int BLOCK_IRON = 5;
+
+    @Override
+    public @Nullable Integer getIDFromName(@NotNull String name) {
+        switch (name) {
+            case "item.diamond_sword": return DIAMOND_SWORD;
+            case "item.coal": return COAL;
+            case "item.stick": return STICK;
+            case "item.iron_pickaxe": return IRON_PICKAXE;
+            case "block.iron": return BLOCK_IRON;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isValidItemID(int id) {
+        return id > 0 && id < 256;
+    }
+
+    @Override
+    public void addRecipe(@NotNull IRecipeDescription recipe) {
+        System.out.println("Adding recipe: " + recipe.toString());
+    }
+
+    @Override
+    public boolean supportsAttribute(@NotNull String attribute) {
+        return attribute.equals("displayName");
+    }
+
+    @Override
+    public String[] getCustomRecipeTypes() {
+        return new String[] {
+                "skibidi", "sigma"
+        };
+    }
+
+    @Override
+    public IRecipeDescription processCustomRecipe(JsonObject object) throws RecipeProcessException {
+        return RecipeFurnace.fromJson(object, "skibidi");
+    }
+}

@@ -1,18 +1,19 @@
 {
 	"type": "crafting_shapeless",
-	"name": "Special Recipe of my own!",
+	"name": "Debug name line 23",
 	"keys": [
 		{
-			"item": "item.diamond_sword"
+			"item": "block.iron",
+			"meta": 3
 		},
 		{
 			"item": "item.stick"
 		}
 	],
 	"result": {
-		"item": "item.diamond_sword",
-		"displayName": "Diamond Giant Sword!",
+		"item": "item.iron_pickaxe",
+		"displayName": "Super Hammer",
 		"count": 1,
-		"meta": 0
+		"meta": 25
 	}
 }

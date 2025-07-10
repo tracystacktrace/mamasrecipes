@@ -24,6 +24,10 @@ public class RecipeShapeless implements IRecipeDescription {
         this.keys = keys;
     }
 
+    public ItemDescription[] getInput() {
+        return this.keys;
+    }
+
     @Override
     public @NotNull String getType() {
         return "crafting_shapeless";
