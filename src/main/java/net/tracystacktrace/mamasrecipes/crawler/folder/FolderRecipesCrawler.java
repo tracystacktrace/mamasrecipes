@@ -49,7 +49,7 @@ public class FolderRecipesCrawler implements ICrawler {
         final List<Path> folderResult = collectJsonFiles(file);
 
         if(folderResult.isEmpty()) {
-            System.out.printf("The folder is empty, ignoring: %s", file.getAbsolutePath());
+            System.out.println(String.format("The folder is empty, ignoring: %s", file.getAbsolutePath()));
             return null;
         }
 
