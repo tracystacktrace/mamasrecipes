@@ -1,14 +1,14 @@
-package net.tracystacktrace.mamasrecipes.walk;
+package net.tracystacktrace.mamasrecipes.crawler.folder;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.tracystacktrace.mamasrecipes.bridge.ILocalization;
-import net.tracystacktrace.mamasrecipes.bridge.MainBridge;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
+import net.tracystacktrace.mamasrecipes.crawler.ICrawler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -19,42 +19,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WalkFolder {
+public class FolderRecipesCrawler implements ICrawler {
     protected final File folder;
     protected final List<IRecipeDescription> recipes;
 
-    public WalkFolder(File folder, List<IRecipeDescription> recipes) {
+    public FolderRecipesCrawler(File folder, List<IRecipeDescription> recipes) {
         this.folder = folder;
         this.recipes = recipes;
     }
 
-    public void initializeRecipes() {
-        final ILocalization localized = MainBridge.getLocalization();
-        if(this.recipes != null) {
-            for(IRecipeDescription recipe : this.recipes) {
-                localized.addRecipe(recipe);
-            }
-        }
+    @Override
+    public @Nullable List<IRecipeDescription> getRecipes() {
+        return this.recipes;
     }
 
     public @NotNull File getFolder() {
         return this.folder;
     }
 
-    public static @NotNull WalkFolder walk(@NotNull File file) throws WalkException {
+    public static @Nullable FolderRecipesCrawler fromFolder(@NotNull File file) throws FolderCrawlerException {
         if(!file.exists()) {
             file.mkdirs();
         }
 
         if(!file.isDirectory()) {
-            throw new WalkException(WalkException.NOT_A_FOLDER, file.getAbsolutePath(), null);
+            throw new FolderCrawlerException(FolderCrawlerException.NOT_A_FOLDER, file.getAbsolutePath(), null);
         }
 
         final List<Path> folderResult = collectJsonFiles(file);
 
         if(folderResult.isEmpty()) {
             System.out.printf("The folder is empty, ignoring: %s", file.getAbsolutePath());
-            return new WalkFolder(file, null);
+            return null;
         }
 
         List<IRecipeDescription> collector = new ArrayList<>();
@@ -64,27 +60,27 @@ public class WalkFolder {
                 final IRecipeDescription description = RecipeReader.read(content);
                 collector.add(description);
             } catch (RecipeProcessException e) {
-                throw new WalkException(WalkException.RECIPE_PROCESS_FAILED, path.toFile().getAbsolutePath(), e);
+                throw new FolderCrawlerException(FolderCrawlerException.RECIPE_PROCESS_FAILED, path.toFile().getAbsolutePath(), e);
             }
         }
 
         System.out.println("Collected about " + collector.size() + " recipes in folder: " + file.getAbsolutePath());
 
-        return new WalkFolder(file, collector);
+        return new FolderRecipesCrawler(file, collector);
     }
 
-    static @NotNull List<@NotNull Path> collectJsonFiles(@NotNull File folder) throws WalkException {
+    static @NotNull List<@NotNull Path> collectJsonFiles(@NotNull File folder) throws FolderCrawlerException {
         try (Stream<Path> paths = Files.walk(folder.toPath())) {
             return paths
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".json"))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new WalkException(WalkException.FOLDER_READ_FAILED, folder.getAbsolutePath(), e);
+            throw new FolderCrawlerException(FolderCrawlerException.FOLDER_READ_FAILED, folder.getAbsolutePath(), e);
         }
     }
 
-    static @NotNull JsonObject readJsonFile(@NotNull Path file) throws WalkException {
+    static @NotNull JsonObject readJsonFile(@NotNull Path file) throws FolderCrawlerException {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(file), StandardCharsets.UTF_8))) {
 
@@ -93,13 +89,13 @@ public class WalkFolder {
                 builder.append(line);
             }
         } catch (IOException e) {
-            throw new WalkException(WalkException.FILE_READ_FAILED, file.toFile().getAbsolutePath(), e);
+            throw new FolderCrawlerException(FolderCrawlerException.FILE_READ_FAILED, file.toFile().getAbsolutePath(), e);
         }
 
         try {
             return JsonParser.parseString(builder.toString()).getAsJsonObject();
         } catch (JsonSyntaxException e) {
-            throw new WalkException(WalkException.INVALID_JSON_FILE, file.toFile().getAbsolutePath(), e);
+            throw new FolderCrawlerException(FolderCrawlerException.INVALID_JSON_FILE, file.toFile().getAbsolutePath(), e);
         }
     }
 }

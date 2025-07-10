@@ -1,9 +1,9 @@
-package net.tracystacktrace.mamasrecipes.walk;
+package net.tracystacktrace.mamasrecipes.crawler.folder;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class WalkException extends Exception {
+public class FolderCrawlerException extends Exception {
     public static final byte NOT_A_FOLDER = -128;
     public static final byte FOLDER_READ_FAILED = -127;
     public static final byte FILE_READ_FAILED = -126;
@@ -22,11 +22,11 @@ public class WalkException extends Exception {
         }
     }
 
-    public WalkException(byte code, @Nullable String optional, @Nullable Exception e) {
+    public FolderCrawlerException(byte code, @Nullable String optional, @Nullable Exception e) {
         super(getErrorMessage(code, optional), e);
     }
 
-    public WalkException(byte code, @Nullable Exception e) {
+    public FolderCrawlerException(byte code, @Nullable Exception e) {
         this(code, null, e);
     }
 }
