@@ -48,7 +48,10 @@ public final class FakeLocalized implements ILocalization {
     }
 
     @Override
-    public IRecipeDescription processCustomRecipe(JsonObject object) throws RecipeProcessException {
+    public IRecipeDescription processCustomRecipe(
+            @NotNull String type,
+            @NotNull JsonObject object
+    ) throws RecipeProcessException {
         return RecipeFurnace.fromJson(object, "skibidi");
     }
 }

@@ -25,5 +25,8 @@ public interface ILocalization {
 
     String[] getCustomRecipeTypes();
 
-    IRecipeDescription processCustomRecipe(JsonObject object) throws RecipeProcessException;
+    IRecipeDescription processCustomRecipe(
+            @NotNull String type,
+            @NotNull JsonObject object
+    ) throws RecipeProcessException;
 }

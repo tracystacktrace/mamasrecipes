@@ -54,7 +54,7 @@ public final class RecipeReader {
                     return RecipeFurnace.fromJson(object, "furnace");
                 }
                 default: {
-                    IRecipeDescription description = localized.processCustomRecipe(object);
+                    IRecipeDescription description = localized.processCustomRecipe(typeExtracted, object);
                     if(description == null) {
                         throw new RuntimeException("Fucked up here...");
                     }
