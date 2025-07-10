@@ -132,7 +132,7 @@ public class RecipeShaped implements IRecipeDescription {
         }
 
         //construct recipe instance
-        final RecipeShaped shaped = new RecipeShaped(build_pattern, build_keys, build_result);
+        final RecipeShaped instance = new RecipeShaped(build_pattern, build_keys, build_result);
 
         //additional support for names, just for fun!
         if(object.has("name")) {
@@ -140,10 +140,10 @@ public class RecipeShaped implements IRecipeDescription {
             final String nameExtracted = SafeExtractor.extractString(nameElement);
 
             if(nameExtracted != null) {
-                shaped.name = nameExtracted;
+                instance.name = nameExtracted;
             }
         }
 
-        return shaped;
+        return instance;
     }
 }

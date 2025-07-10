@@ -25,7 +25,7 @@ public class KeyedItemDescription extends ItemDescription {
         if (object.has("key")) {
             final JsonElement keyElement = object.get("key");
             final String keyExtracted = SafeExtractor.extractString(keyElement);
-            if(keyExtracted != null) {
+            if(keyExtracted != null && !keyExtracted.isEmpty()) {
                 instance.recipeKeyIdentifier = keyExtracted;
             } else {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_KEY, keyElement.toString());
