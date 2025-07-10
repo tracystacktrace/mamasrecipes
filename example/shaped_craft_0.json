@@ -1,0 +1,21 @@
+{
+	"type": "crafting_shaped",
+	"name": "Special Recipe of my own!",
+	"pattern": ["XX ", "XXX", "LXX"],
+	"keys": [
+		{
+			"key": "X",
+			"item": "item.diamond_sword"
+		},
+		{
+			"key": "L",
+			"item": "item.stick"
+		}
+	],
+	"result": {
+		"item": "item.diamond_sword",
+		"displayName": "Diamond Giant Sword!",
+		"count": 1,
+		"meta": 0
+	}
+}
