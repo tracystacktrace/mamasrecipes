@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public interface IEnvironment {
     /* general handlers */
 
-    @Nullable Integer getItemIDFromName(@NotNull String name);
+    @Nullable Integer getItemIDFromName(@NotNull String name, int meta, int count);
 
     boolean isValidItemID(int id);
 

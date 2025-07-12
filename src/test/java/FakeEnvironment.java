@@ -15,7 +15,7 @@ public final class FakeEnvironment implements IEnvironment {
     public static final int BLOCK_IRON = 5;
 
     @Override
-    public @Nullable Integer getItemIDFromName(@NotNull String name) {
+    public @Nullable Integer getItemIDFromName(@NotNull String name, int meta, int count) {
         switch (name) {
             case "item.diamond_sword":
                 return DIAMOND_SWORD;

@@ -45,38 +45,6 @@ public class ItemDescription {
             @NotNull IEnvironment environment,
             @NotNull JsonObject object
     ) throws RecipeProcessException {
-        //process item id/identifier
-        int build_itemID = Integer.MIN_VALUE;
-
-        if (object.has("item")) {
-            final JsonElement itemElement = object.get("item");
-            if (itemElement.isJsonPrimitive()) {
-                final JsonPrimitive itemPrimitive = itemElement.getAsJsonPrimitive();
-                if (itemPrimitive.isString()) {
-                    final String value_iid = itemPrimitive.getAsString();
-                    final Integer processed_iid = environment.getItemIDFromName(value_iid);
-
-                    if (processed_iid != null) {
-                        build_itemID = processed_iid;
-                    } else {
-                        throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_ID, value_iid);
-                    }
-                } else if (itemPrimitive.isNumber()) {
-                    final int value_iid = itemPrimitive.getAsInt();
-
-                    if (environment.isValidItemID(value_iid)) {
-                        build_itemID = value_iid;
-                    } else {
-                        throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_ID, String.valueOf(value_iid));
-                    }
-                }
-            }
-        }
-
-        if (build_itemID == Integer.MIN_VALUE) {
-            throw new RecipeProcessException(RecipeProcessException.ITEM_IDENTIFIER_NOT_FOUND);
-        }
-
         //process item meta
         int build_meta = 0;
 
@@ -107,6 +75,38 @@ public class ItemDescription {
 
         if (build_count < 1) {
             throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_COUNT, String.valueOf(build_count));
+        }
+
+        //process item id/identifier
+        int build_itemID = Integer.MIN_VALUE;
+
+        if (object.has("item")) {
+            final JsonElement itemElement = object.get("item");
+            if (itemElement.isJsonPrimitive()) {
+                final JsonPrimitive itemPrimitive = itemElement.getAsJsonPrimitive();
+                if (itemPrimitive.isString()) {
+                    final String value_iid = itemPrimitive.getAsString();
+                    final Integer processed_iid = environment.getItemIDFromName(value_iid, build_meta, build_count);
+
+                    if (processed_iid != null) {
+                        build_itemID = processed_iid;
+                    } else {
+                        throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_ID, value_iid);
+                    }
+                } else if (itemPrimitive.isNumber()) {
+                    final int value_iid = itemPrimitive.getAsInt();
+
+                    if (environment.isValidItemID(value_iid)) {
+                        build_itemID = value_iid;
+                    } else {
+                        throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_ID, String.valueOf(value_iid));
+                    }
+                }
+            }
+        }
+
+        if (build_itemID == Integer.MIN_VALUE) {
+            throw new RecipeProcessException(RecipeProcessException.ITEM_IDENTIFIER_NOT_FOUND);
         }
 
         //generate item instance
