@@ -11,12 +11,17 @@ public class SourceCrawlerException extends Exception {
 
     public static @NotNull String getErrorMessage(byte code, @Nullable String optional) {
         switch (code) {
-            case FILE_READ_FAILED: return String.format("Failed to read file: %s", optional);
-            case INVALID_JSON_FILE: return String.format("Invalid json file: %s", optional);
-            case FILES_ARRAY_NOT_PRESENT: return String.format("The parameter \"files\" is not present in file: %s", optional);
-            case RECIPE_READ_FAILED: return String.format("Failed to read a recipe: %s", optional);
+            case FILE_READ_FAILED:
+                return String.format("Failed to read file: %s", optional);
+            case INVALID_JSON_FILE:
+                return String.format("Invalid json file: %s", optional);
+            case FILES_ARRAY_NOT_PRESENT:
+                return String.format("The parameter \"files\" is not present in file: %s", optional);
+            case RECIPE_READ_FAILED:
+                return String.format("Failed to read a recipe: %s", optional);
 
-            default: return "Unknown error!";
+            default:
+                return "Unknown error!";
         }
     }
 

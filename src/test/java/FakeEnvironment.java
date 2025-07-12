@@ -7,7 +7,7 @@ import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class FakeLocalized implements IEnvironment {
+public final class FakeEnvironment implements IEnvironment {
     public static final int DIAMOND_SWORD = 1;
     public static final int COAL = 2;
     public static final int STICK = 3;
@@ -65,6 +65,6 @@ public final class FakeLocalized implements IEnvironment {
             @NotNull String type,
             @NotNull JsonObject object
     ) throws RecipeProcessException {
-        return RecipeFurnace.fromJson(object, "skibidi");
+        return RecipeFurnace.fromJson(this, object, "skibidi");
     }
 }

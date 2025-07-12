@@ -2,6 +2,7 @@ package net.tracystacktrace.mamasrecipes.constructor.item;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +19,11 @@ public class KeyedItemDescription extends ItemDescription {
         return this.recipeKeyIdentifier;
     }
 
-    public static @NotNull KeyedItemDescription fromJson(@NotNull JsonObject object) throws RecipeProcessException {
-        final KeyedItemDescription instance = new KeyedItemDescription(ItemDescription.fromJson(object));
+    public static @NotNull KeyedItemDescription fromJson(
+            @NotNull IEnvironment environment,
+            @NotNull JsonObject object
+    ) throws RecipeProcessException {
+        final KeyedItemDescription instance = new KeyedItemDescription(ItemDescription.fromJson(environment, object));
 
         //additional support for key identifier
         if (object.has("key")) {

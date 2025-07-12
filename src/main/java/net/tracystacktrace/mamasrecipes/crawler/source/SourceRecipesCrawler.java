@@ -2,6 +2,7 @@ package net.tracystacktrace.mamasrecipes.crawler.source;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
@@ -34,14 +35,17 @@ public class SourceRecipesCrawler implements ICrawler {
         return this.texturepackName;
     }
 
-    public static @Nullable SourceRecipesCrawler fromSource(@NotNull ISource source) throws SourceCrawlerException {
-        if(!source.hasFile("/mamasrecipes.json")) {
+    public static @Nullable SourceRecipesCrawler fromSource(
+            @NotNull IEnvironment environment,
+            @NotNull ISource source
+    ) throws SourceCrawlerException {
+        if (!source.hasFile("/mamasrecipes.json")) {
             return null;
         }
 
         final InputStream dictator = source.getStream("/mamasrecipes.json");
 
-        if(dictator == null) {
+        if (dictator == null) {
             throw new SourceCrawlerException(SourceCrawlerException.FILE_READ_FAILED, "/mamasrecipes.json", null);
         }
 
@@ -51,24 +55,24 @@ public class SourceRecipesCrawler implements ICrawler {
 
         final List<String> filesList = obtainRecipePaths(dictateContent, "/mamasrecipes.json");
 
-        if(filesList.isEmpty()) {
+        if (filesList.isEmpty()) {
             return null;
         }
 
         final List<IRecipeDescription> collector = new ArrayList<>();
 
-        for(String candidate_path : filesList) {
-            if(!candidate_path.startsWith("/")) {
+        for (String candidate_path : filesList) {
+            if (!candidate_path.startsWith("/")) {
                 candidate_path = "/" + candidate_path;
             }
 
-            if(source.hasFile(candidate_path)) {
+            if (source.hasFile(candidate_path)) {
                 final InputStream stream1 = source.getStream(candidate_path);
 
-                if(stream1 != null) {
+                if (stream1 != null) {
                     final JsonObject candidate_json = IOTools.readJSON(stream1, candidate_path);
                     try {
-                        final IRecipeDescription candidate_instance = RecipeReader.read(candidate_json);
+                        final IRecipeDescription candidate_instance = RecipeReader.read(environment, candidate_json);
                         collector.add(candidate_instance);
                     } catch (RecipeProcessException e) {
                         throw new SourceCrawlerException(SourceCrawlerException.RECIPE_READ_FAILED, candidate_path, e);
@@ -85,21 +89,24 @@ public class SourceRecipesCrawler implements ICrawler {
     }
 
 
-    static List<String> obtainRecipePaths(@NotNull JsonObject object, @NotNull String debugName) throws SourceCrawlerException {
-        if(!object.has("files")) {
+    static List<String> obtainRecipePaths(
+            @NotNull JsonObject object,
+            @NotNull String debugName
+    ) throws SourceCrawlerException {
+        if (!object.has("files")) {
             throw new SourceCrawlerException(SourceCrawlerException.FILES_ARRAY_NOT_PRESENT, debugName, null);
         }
 
         final JsonElement filesElement = object.get("files");
 
-        if(!filesElement.isJsonArray()) {
+        if (!filesElement.isJsonArray()) {
             throw new SourceCrawlerException(SourceCrawlerException.INVALID_JSON_FILE, filesElement.toString(), null);
         }
 
         final List<String> collector = new ArrayList<>();
 
-        for(JsonElement candidate : filesElement.getAsJsonArray()) {
-            if(candidate.isJsonPrimitive() && candidate.getAsJsonPrimitive().isString()) {
+        for (JsonElement candidate : filesElement.getAsJsonArray()) {
+            if (candidate.isJsonPrimitive() && candidate.getAsJsonPrimitive().isString()) {
                 collector.add(candidate.getAsString());
             }
         }
@@ -108,10 +115,11 @@ public class SourceRecipesCrawler implements ICrawler {
     }
 
     static void close(@Nullable InputStream stream) {
-        if(stream != null) {
+        if (stream != null) {
             try {
                 stream.close();
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
     }
 }

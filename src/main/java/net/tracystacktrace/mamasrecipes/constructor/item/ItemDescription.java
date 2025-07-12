@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
-import net.tracystacktrace.mamasrecipes.bridge.MainBridge;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
@@ -42,9 +41,10 @@ public class ItemDescription {
         return this.displayName;
     }
 
-    public static @NotNull ItemDescription fromJson(@NotNull JsonObject object) throws RecipeProcessException {
-        final IEnvironment localizer = MainBridge.getLocalization();
-
+    public static @NotNull ItemDescription fromJson(
+            @NotNull IEnvironment environment,
+            @NotNull JsonObject object
+    ) throws RecipeProcessException {
         //process item id/identifier
         int build_itemID = Integer.MIN_VALUE;
 
@@ -54,7 +54,7 @@ public class ItemDescription {
                 final JsonPrimitive itemPrimitive = itemElement.getAsJsonPrimitive();
                 if (itemPrimitive.isString()) {
                     final String value_iid = itemPrimitive.getAsString();
-                    final Integer processed_iid = localizer.getItemIDFromName(value_iid);
+                    final Integer processed_iid = environment.getItemIDFromName(value_iid);
 
                     if (processed_iid != null) {
                         build_itemID = processed_iid;
@@ -64,7 +64,7 @@ public class ItemDescription {
                 } else if (itemPrimitive.isNumber()) {
                     final int value_iid = itemPrimitive.getAsInt();
 
-                    if (localizer.isValidItemID(value_iid)) {
+                    if (environment.isValidItemID(value_iid)) {
                         build_itemID = value_iid;
                     } else {
                         throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_ID, String.valueOf(value_iid));
@@ -113,15 +113,15 @@ public class ItemDescription {
         final ItemDescription instance = new ItemDescription(build_itemID, build_count, build_meta);
 
         //process custom attributes, if found!
-        final String[] customAttributes = localizer.getCustomItemAttributes();
-        if(customAttributes != null && customAttributes.length > 0) {
+        final String[] customAttributes = environment.getCustomItemAttributes();
+        if (customAttributes != null && customAttributes.length > 0) {
             //noinspection ForLoopReplaceableByForEach
-            for(int i = 0; i < customAttributes.length; i++) {
+            for (int i = 0; i < customAttributes.length; i++) {
                 final String candidate = customAttributes[i];
-                if(object.has(candidate)) {
+                if (object.has(candidate)) {
                     final JsonElement caElement = object.get(candidate);
                     final Object caObject = SafeExtractor.extractSomething(caElement);
-                    localizer.processCustomItemAttribute(instance, candidate, caObject);
+                    environment.processCustomItemAttribute(instance, candidate, caObject);
                 }
             }
         }

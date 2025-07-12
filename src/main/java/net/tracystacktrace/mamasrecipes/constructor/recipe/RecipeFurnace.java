@@ -2,8 +2,9 @@ package net.tracystacktrace.mamasrecipes.constructor.recipe;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
+import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +49,11 @@ public class RecipeFurnace implements IRecipeDescription {
         return this.name;
     }
 
-    public static @NotNull RecipeFurnace fromJson(@NotNull JsonObject object, @Nullable String type) throws RecipeProcessException {
+    public static @NotNull RecipeFurnace fromJson(
+            @NotNull IEnvironment environment,
+            @NotNull JsonObject object,
+            @Nullable String type
+    ) throws RecipeProcessException {
         if (type == null || type.isEmpty()) {
             type = "furnace"; //dumb protection
         }
@@ -68,7 +73,7 @@ public class RecipeFurnace implements IRecipeDescription {
             }
 
             try {
-                build_input = ItemDescription.fromJson(inputElement.getAsJsonObject());
+                build_input = ItemDescription.fromJson(environment, inputElement.getAsJsonObject());
             } catch (RecipeProcessException e) {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_RESULT, inputElement.toString(), e);
             }
@@ -88,7 +93,7 @@ public class RecipeFurnace implements IRecipeDescription {
             }
 
             try {
-                build_result = ItemDescription.fromJson(resultElement.getAsJsonObject());
+                build_result = ItemDescription.fromJson(environment, resultElement.getAsJsonObject());
             } catch (RecipeProcessException e) {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_RESULT, resultElement.toString(), e);
             }

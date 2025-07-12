@@ -3,7 +3,6 @@ package net.tracystacktrace.mamasrecipes.constructor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
-import net.tracystacktrace.mamasrecipes.bridge.MainBridge;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeShaped;
@@ -32,10 +31,10 @@ public final class RecipeReader {
     }
 
     public static @NotNull IRecipeDescription read(
+            @NotNull IEnvironment environment,
             @NotNull JsonObject object
     ) throws RecipeProcessException {
-        final IEnvironment localized = MainBridge.getLocalization();
-        final String[] customTypes = localized.getCustomRecipeTypes();
+        final String[] customTypes = environment.getCustomRecipeTypes();
 
         if (object.has("type")) {
             final JsonElement typeElement = object.get("type");
@@ -47,16 +46,16 @@ public final class RecipeReader {
 
             switch (typeExtracted) {
                 case "crafting_shaped": {
-                    return RecipeShaped.fromJson(object);
+                    return RecipeShaped.fromJson(environment, object);
                 }
                 case "crafting_shapeless": {
-                    return RecipeShapeless.fromJson(object);
+                    return RecipeShapeless.fromJson(environment, object);
                 }
                 case "furnace": {
-                    return RecipeFurnace.fromJson(object, "furnace");
+                    return RecipeFurnace.fromJson(environment, object, "furnace");
                 }
                 default: {
-                    IRecipeDescription description = localized.processCustomRecipe(typeExtracted, object);
+                    IRecipeDescription description = environment.processCustomRecipe(typeExtracted, object);
                     if (description == null) {
                         throw new RecipeProcessException(RecipeProcessException.INCORRECT_RECIPE_TYPE, typeExtracted);
                     }

@@ -1,21 +1,16 @@
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.tracystacktrace.mamasrecipes.bridge.MainBridge;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeShaped;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeShapeless;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RecipesTest {
-
-    @BeforeAll
-    static void initLocalizer() {
-        MainBridge.setLocalization(new FakeLocalized());
-    }
+    private static final IEnvironment ENVIRONMENT = new FakeEnvironment();
 
     @Test
     void testRecipeShaped() {
@@ -24,7 +19,7 @@ public class RecipesTest {
 
         RecipeShaped recipe;
         try {
-            recipe = RecipeShaped.fromJson(jsonObject);
+            recipe = RecipeShaped.fromJson(ENVIRONMENT, jsonObject);
         } catch (RecipeProcessException e) {
             throw new RuntimeException(e);
         }
@@ -41,7 +36,7 @@ public class RecipesTest {
 
         //item assert
         assertNotNull(recipe.getResult());
-        assertEquals(FakeLocalized.DIAMOND_SWORD, recipe.getResult().getItemID());
+        assertEquals(FakeEnvironment.DIAMOND_SWORD, recipe.getResult().getItemID());
         assertEquals("Diamond Giant Sword!", recipe.getResult().getDisplayName());
         assertEquals(1, recipe.getResult().getCount());
         assertEquals(0, recipe.getResult().getMeta());
@@ -54,7 +49,7 @@ public class RecipesTest {
 
         RecipeShapeless recipe;
         try {
-            recipe = RecipeShapeless.fromJson(jsonObject);
+            recipe = RecipeShapeless.fromJson(ENVIRONMENT, jsonObject);
         } catch (RecipeProcessException e) {
             throw new RuntimeException(e);
         }
@@ -66,12 +61,12 @@ public class RecipesTest {
 
         //assert keys (dumb way)
         assertNotNull(recipe.getInput());
-        assertTrue(recipe.getInput()[0].getItemID() == FakeLocalized.BLOCK_IRON || recipe.getInput()[1].getItemID() == FakeLocalized.BLOCK_IRON, "Block iron detected in input keys!");
-        assertTrue(recipe.getInput()[0].getItemID() == FakeLocalized.STICK || recipe.getInput()[1].getItemID() == FakeLocalized.STICK, "Item stick detected in input keys!");
+        assertTrue(recipe.getInput()[0].getItemID() == FakeEnvironment.BLOCK_IRON || recipe.getInput()[1].getItemID() == FakeEnvironment.BLOCK_IRON, "Block iron detected in input keys!");
+        assertTrue(recipe.getInput()[0].getItemID() == FakeEnvironment.STICK || recipe.getInput()[1].getItemID() == FakeEnvironment.STICK, "Item stick detected in input keys!");
 
         //result assert
         assertNotNull(recipe.getResult());
-        assertEquals(FakeLocalized.IRON_PICKAXE, recipe.getResult().getItemID());
+        assertEquals(FakeEnvironment.IRON_PICKAXE, recipe.getResult().getItemID());
         assertEquals("Super Hammer", recipe.getResult().getDisplayName());
         assertEquals(1, recipe.getResult().getCount());
         assertEquals(25, recipe.getResult().getMeta());
@@ -84,7 +79,7 @@ public class RecipesTest {
 
         RecipeFurnace recipe;
         try {
-            recipe = RecipeFurnace.fromJson(jsonObject, "furnace");
+            recipe = RecipeFurnace.fromJson(ENVIRONMENT, jsonObject, "furnace");
         } catch (RecipeProcessException e) {
             throw new RuntimeException(e);
         }
@@ -95,14 +90,14 @@ public class RecipesTest {
 
         //input assert
         assertNotNull(recipe.getInput());
-        assertEquals(FakeLocalized.COAL, recipe.getInput().getItemID());
+        assertEquals(FakeEnvironment.COAL, recipe.getInput().getItemID());
         assertNull(recipe.getInput().getDisplayName());
         assertEquals(1, recipe.getInput().getCount());
         assertEquals(0, recipe.getInput().getMeta());
 
         //result assert
         assertNotNull(recipe.getResult());
-        assertEquals(FakeLocalized.COAL, recipe.getResult().getItemID());
+        assertEquals(FakeEnvironment.COAL, recipe.getResult().getItemID());
         assertEquals("Super Coal", recipe.getResult().getDisplayName());
         assertEquals(1, recipe.getResult().getCount());
         assertEquals(1, recipe.getResult().getMeta());

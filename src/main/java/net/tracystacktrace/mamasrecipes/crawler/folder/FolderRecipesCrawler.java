@@ -1,8 +1,7 @@
 package net.tracystacktrace.mamasrecipes.crawler.folder;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
@@ -11,8 +10,8 @@ import net.tracystacktrace.mamasrecipes.tools.IOTools;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -38,27 +37,30 @@ public class FolderRecipesCrawler implements ICrawler {
         return this.folder;
     }
 
-    public static @Nullable FolderRecipesCrawler fromFolder(@NotNull File file) throws FolderCrawlerException {
-        if(!file.exists()) {
+    public static @Nullable FolderRecipesCrawler fromFolder(
+            @NotNull IEnvironment environment,
+            @NotNull File file
+    ) throws FolderCrawlerException {
+        if (!file.exists()) {
             file.mkdirs();
         }
 
-        if(!file.isDirectory()) {
+        if (!file.isDirectory()) {
             throw new FolderCrawlerException(FolderCrawlerException.NOT_A_FOLDER, file.getAbsolutePath(), null);
         }
 
         final List<Path> folderResult = collectJsonFiles(file);
 
-        if(folderResult.isEmpty()) {
+        if (folderResult.isEmpty()) {
             System.out.println(String.format("The folder is empty, ignoring: %s", file.getAbsolutePath()));
             return null;
         }
 
         List<IRecipeDescription> collector = new ArrayList<>();
-        for(Path path : folderResult) {
+        for (Path path : folderResult) {
             final JsonObject content = IOTools.readJSON(path);
             try {
-                final IRecipeDescription description = RecipeReader.read(content);
+                final IRecipeDescription description = RecipeReader.read(environment, content);
                 collector.add(description);
             } catch (RecipeProcessException e) {
                 throw new FolderCrawlerException(FolderCrawlerException.RECIPE_PROCESS_FAILED, path.toFile().getAbsolutePath(), e);

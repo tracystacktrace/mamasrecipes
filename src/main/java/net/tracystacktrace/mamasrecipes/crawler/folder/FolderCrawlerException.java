@@ -12,13 +12,19 @@ public class FolderCrawlerException extends Exception {
 
     public static @NotNull String getErrorMessage(byte code, @Nullable String optional) {
         switch (code) {
-            case NOT_A_FOLDER: return String.format("Not a folder: %s", optional);
-            case FOLDER_READ_FAILED: return String.format("Failed to walk through a folder: %s", optional);
-            case FILE_READ_FAILED: return String.format("Failed to read a file: %s", optional);
-            case INVALID_JSON_FILE: return String.format("Invalid JSON file: %s", optional);
-            case RECIPE_PROCESS_FAILED: return String.format("Failed to process recipe file: %s", optional);
+            case NOT_A_FOLDER:
+                return String.format("Not a folder: %s", optional);
+            case FOLDER_READ_FAILED:
+                return String.format("Failed to walk through a folder: %s", optional);
+            case FILE_READ_FAILED:
+                return String.format("Failed to read a file: %s", optional);
+            case INVALID_JSON_FILE:
+                return String.format("Invalid JSON file: %s", optional);
+            case RECIPE_PROCESS_FAILED:
+                return String.format("Failed to process recipe file: %s", optional);
 
-            default: return "Unknown error!";
+            default:
+                return "Unknown error!";
         }
     }
 

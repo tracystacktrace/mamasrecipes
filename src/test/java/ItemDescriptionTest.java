@@ -1,10 +1,9 @@
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.tracystacktrace.mamasrecipes.bridge.MainBridge;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
 import net.tracystacktrace.mamasrecipes.constructor.item.KeyedItemDescription;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,11 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 //this is a set of ugly tests
 public class ItemDescriptionTest {
-
-    @BeforeAll
-    static void initLocalizer() {
-        MainBridge.setLocalization(new FakeLocalized());
-    }
+    private static final IEnvironment ENVIRONMENT = new FakeEnvironment();
 
     @Test
     void testSampleItem() {
@@ -25,13 +20,13 @@ public class ItemDescriptionTest {
 
         ItemDescription description;
         try {
-            description = ItemDescription.fromJson(jsonObject);
+            description = ItemDescription.fromJson(ENVIRONMENT, jsonObject);
         } catch (RecipeProcessException e) {
             throw new RuntimeException(e);
         }
 
         assertNotNull(description);
-        assertEquals(FakeLocalized.DIAMOND_SWORD, description.getItemID());
+        assertEquals(FakeEnvironment.DIAMOND_SWORD, description.getItemID());
         assertEquals(5, description.getMeta());
         assertEquals(32, description.getCount());
         assertEquals("Hello Sigma!", description.getDisplayName());
@@ -44,14 +39,14 @@ public class ItemDescriptionTest {
 
         KeyedItemDescription description;
         try {
-            description = KeyedItemDescription.fromJson(jsonObject);
+            description = KeyedItemDescription.fromJson(ENVIRONMENT, jsonObject);
         } catch (RecipeProcessException e) {
             throw new RuntimeException(e);
         }
 
         assertNotNull(description);
         assertEquals("X", description.getKey());
-        assertEquals(FakeLocalized.COAL, description.getItemID());
+        assertEquals(FakeEnvironment.COAL, description.getItemID());
         assertEquals(0, description.getMeta());
         assertEquals(2, description.getCount());
         assertEquals("Asdfgh", description.getDisplayName());

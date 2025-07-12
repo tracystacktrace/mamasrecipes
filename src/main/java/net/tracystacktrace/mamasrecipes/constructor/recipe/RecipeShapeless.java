@@ -2,8 +2,9 @@ package net.tracystacktrace.mamasrecipes.constructor.recipe;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
+import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,10 @@ public class RecipeShapeless implements IRecipeDescription {
     }
 
 
-    public static @NotNull RecipeShapeless fromJson(@NotNull JsonObject object) throws RecipeProcessException {
+    public static @NotNull RecipeShapeless fromJson(
+            @NotNull IEnvironment environment,
+            @NotNull JsonObject object
+    ) throws RecipeProcessException {
         //general checks
         if (!SafeExtractor.assertRecipeType(object, "crafting_shapeless")) {
             throw new RecipeProcessException(RecipeProcessException.INCORRECT_RECIPE_TYPE, object.has("type") ? object.get("type").toString() : null);
@@ -72,7 +76,7 @@ public class RecipeShapeless implements IRecipeDescription {
                 }
 
                 try {
-                    final ItemDescription buildCandidate = ItemDescription.fromJson(candidate.getAsJsonObject());
+                    final ItemDescription buildCandidate = ItemDescription.fromJson(environment, candidate.getAsJsonObject());
                     collector.add(buildCandidate);
                 } catch (RecipeProcessException e) {
                     throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_KEY, candidate.toString(), e);
@@ -96,7 +100,7 @@ public class RecipeShapeless implements IRecipeDescription {
             }
 
             try {
-                build_result = ItemDescription.fromJson(resultElement.getAsJsonObject());
+                build_result = ItemDescription.fromJson(environment, resultElement.getAsJsonObject());
             } catch (RecipeProcessException e) {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_RESULT, resultElement.toString(), e);
             }
