@@ -2,24 +2,19 @@ package net.tracystacktrace.mamasrecipes.crawler.source;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
 import net.tracystacktrace.mamasrecipes.crawler.ICrawler;
+import net.tracystacktrace.mamasrecipes.tools.IOTools;
 import net.tracystacktrace.mamasrecipes.tools.ISource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SourceRecipesCrawler implements ICrawler {
     protected final String texturepackName;
@@ -44,15 +39,15 @@ public class SourceRecipesCrawler implements ICrawler {
             return null;
         }
 
-        final InputStream dictateJsonIS = source.getStream("/mamasrecipes.json");
+        final InputStream dictator = source.getStream("/mamasrecipes.json");
 
-        if(dictateJsonIS == null) {
+        if(dictator == null) {
             throw new SourceCrawlerException(SourceCrawlerException.FILE_READ_FAILED, "/mamasrecipes.json", null);
         }
 
-        final JsonObject dictateContent = readJsonFile(dictateJsonIS, "/mamasrecipes.json");
+        final JsonObject dictateContent = IOTools.readJSON(dictator, "/mamasrecipes.json");
 
-        close(dictateJsonIS);
+        close(dictator);
 
         final List<String> filesList = obtainRecipePaths(dictateContent, "/mamasrecipes.json");
 
@@ -71,7 +66,7 @@ public class SourceRecipesCrawler implements ICrawler {
                 final InputStream stream1 = source.getStream(candidate_path);
 
                 if(stream1 != null) {
-                    final JsonObject candidate_json = readJsonFile(stream1, candidate_path);
+                    final JsonObject candidate_json = IOTools.readJSON(stream1, candidate_path);
                     try {
                         final IRecipeDescription candidate_instance = RecipeReader.read(candidate_json);
                         collector.add(candidate_instance);
@@ -110,25 +105,6 @@ public class SourceRecipesCrawler implements ICrawler {
         }
 
         return collector;
-    }
-
-    static @NotNull JsonObject readJsonFile(
-            @NotNull InputStream inputStream,
-            @NotNull String debugName
-    ) throws SourceCrawlerException {
-        String data;
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            data = reader.lines().collect(Collectors.joining());
-        } catch (IOException e) {
-            throw new SourceCrawlerException(SourceCrawlerException.FILE_READ_FAILED, debugName, e);
-        }
-
-        try {
-            return JsonParser.parseString(data).getAsJsonObject();
-        } catch (JsonSyntaxException e) {
-            throw new SourceCrawlerException(SourceCrawlerException.INVALID_JSON_FILE, debugName, e);
-        }
     }
 
     static void close(@Nullable InputStream stream) {

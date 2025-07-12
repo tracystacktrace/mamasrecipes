@@ -7,6 +7,7 @@ import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
 import net.tracystacktrace.mamasrecipes.crawler.ICrawler;
+import net.tracystacktrace.mamasrecipes.tools.IOTools;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +56,7 @@ public class FolderRecipesCrawler implements ICrawler {
 
         List<IRecipeDescription> collector = new ArrayList<>();
         for(Path path : folderResult) {
-            final JsonObject content = readJsonFile(path);
+            final JsonObject content = IOTools.readJSON(path);
             try {
                 final IRecipeDescription description = RecipeReader.read(content);
                 collector.add(description);
@@ -77,25 +78,6 @@ public class FolderRecipesCrawler implements ICrawler {
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new FolderCrawlerException(FolderCrawlerException.FOLDER_READ_FAILED, folder.getAbsolutePath(), e);
-        }
-    }
-
-    static @NotNull JsonObject readJsonFile(@NotNull Path file) throws FolderCrawlerException {
-        StringBuilder builder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(file), StandardCharsets.UTF_8))) {
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-        } catch (IOException e) {
-            throw new FolderCrawlerException(FolderCrawlerException.FILE_READ_FAILED, file.toFile().getAbsolutePath(), e);
-        }
-
-        try {
-            return JsonParser.parseString(builder.toString()).getAsJsonObject();
-        } catch (JsonSyntaxException e) {
-            throw new FolderCrawlerException(FolderCrawlerException.INVALID_JSON_FILE, file.toFile().getAbsolutePath(), e);
         }
     }
 }

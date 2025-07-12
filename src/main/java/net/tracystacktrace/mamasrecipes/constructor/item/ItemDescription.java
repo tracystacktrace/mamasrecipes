@@ -3,11 +3,12 @@ package net.tracystacktrace.mamasrecipes.constructor.item;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.tracystacktrace.mamasrecipes.bridge.ILocalization;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.bridge.MainBridge;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemDescription {
     protected final int itemID;
@@ -33,12 +34,16 @@ public class ItemDescription {
         return this.count;
     }
 
+    public void setDisplayName(@Nullable String displayName) {
+        this.displayName = displayName;
+    }
+
     public String getDisplayName() {
         return this.displayName;
     }
 
     public static @NotNull ItemDescription fromJson(@NotNull JsonObject object) throws RecipeProcessException {
-        final ILocalization localizer = MainBridge.getLocalization();
+        final IEnvironment localizer = MainBridge.getLocalization();
 
         //process item id/identifier
         int build_itemID = Integer.MIN_VALUE;
@@ -49,7 +54,7 @@ public class ItemDescription {
                 final JsonPrimitive itemPrimitive = itemElement.getAsJsonPrimitive();
                 if (itemPrimitive.isString()) {
                     final String value_iid = itemPrimitive.getAsString();
-                    final Integer processed_iid = localizer.getIDFromName(value_iid);
+                    final Integer processed_iid = localizer.getItemIDFromName(value_iid);
 
                     if (processed_iid != null) {
                         build_itemID = processed_iid;
@@ -107,17 +112,31 @@ public class ItemDescription {
         //generate item instance
         final ItemDescription instance = new ItemDescription(build_itemID, build_count, build_meta);
 
-        //additional support for ReIndev's displayName
-        if (object.has("displayName") && localizer.supportsAttribute("displayName")) {
-            final JsonElement dnElement = object.get("displayName");
-            final String dnExtracted = SafeExtractor.extractString(dnElement);
-
-            if (dnExtracted != null) {
-                instance.displayName = dnExtracted;
-            } else {
-                throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_DISPLAY_NAME, dnElement.toString());
+        //process custom attributes, if found!
+        final String[] customAttributes = localizer.getCustomItemAttributes();
+        if(customAttributes != null && customAttributes.length > 0) {
+            //noinspection ForLoopReplaceableByForEach
+            for(int i = 0; i < customAttributes.length; i++) {
+                final String candidate = customAttributes[i];
+                if(object.has(candidate)) {
+                    final JsonElement caElement = object.get(candidate);
+                    final Object caObject = SafeExtractor.extractSomething(caElement);
+                    localizer.processCustomItemAttribute(instance, candidate, caObject);
+                }
             }
         }
+
+        //additional support for ReIndev's displayName
+//        if (object.has("displayName") && localizer.hasItemAttribute("displayName")) {
+//            final JsonElement dnElement = object.get("displayName");
+//            final String dnExtracted = SafeExtractor.extractString(dnElement);
+//
+//            if (dnExtracted != null) {
+//                instance.displayName = dnExtracted;
+//            } else {
+//                throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_DISPLAY_NAME, dnElement.toString());
+//            }
+//        }
 
         return instance;
     }

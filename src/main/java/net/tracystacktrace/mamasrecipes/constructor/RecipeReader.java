@@ -2,7 +2,7 @@ package net.tracystacktrace.mamasrecipes.constructor;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.tracystacktrace.mamasrecipes.bridge.ILocalization;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.bridge.MainBridge;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
@@ -15,31 +15,33 @@ import org.jetbrains.annotations.Nullable;
 public final class RecipeReader {
 
     static boolean isValidType(@NotNull String check, @NotNull String @Nullable [] custom) {
-        if(check.equals("crafting_shaped") || check.equals("crafting_shapeless") || check.equals("furnace")) {
+        if (check.equals("crafting_shaped") || check.equals("crafting_shapeless") || check.equals("furnace")) {
             return true;
         }
 
-        if(custom == null) {
+        if (custom == null) {
             return false;
         }
 
-        for(String a : custom) {
-            if(check.equals(a)) {
+        for (String a : custom) {
+            if (check.equals(a)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static @NotNull IRecipeDescription read(@NotNull JsonObject object) throws RecipeProcessException {
-        final ILocalization localized = MainBridge.getLocalization();
+    public static @NotNull IRecipeDescription read(
+            @NotNull JsonObject object
+    ) throws RecipeProcessException {
+        final IEnvironment localized = MainBridge.getLocalization();
         final String[] customTypes = localized.getCustomRecipeTypes();
 
-        if(object.has("type")) {
+        if (object.has("type")) {
             final JsonElement typeElement = object.get("type");
             final String typeExtracted = SafeExtractor.extractString(typeElement);
 
-            if(typeExtracted == null || !isValidType(typeExtracted, customTypes)) {
+            if (typeExtracted == null || !isValidType(typeExtracted, customTypes)) {
                 throw new RecipeProcessException(RecipeProcessException.INVALID_RECIPE_TYPE, typeElement.toString());
             }
 
@@ -55,8 +57,8 @@ public final class RecipeReader {
                 }
                 default: {
                     IRecipeDescription description = localized.processCustomRecipe(typeExtracted, object);
-                    if(description == null) {
-                        throw new RuntimeException("Fucked up here...");
+                    if (description == null) {
+                        throw new RecipeProcessException(RecipeProcessException.INCORRECT_RECIPE_TYPE, typeExtracted);
                     }
                     return description;
                 }

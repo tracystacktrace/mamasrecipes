@@ -1,12 +1,13 @@
 import com.google.gson.JsonObject;
-import net.tracystacktrace.mamasrecipes.bridge.ILocalization;
+import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
+import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class FakeLocalized implements ILocalization {
+public final class FakeLocalized implements IEnvironment {
     public static final int DIAMOND_SWORD = 1;
     public static final int COAL = 2;
     public static final int STICK = 3;
@@ -14,13 +15,18 @@ public final class FakeLocalized implements ILocalization {
     public static final int BLOCK_IRON = 5;
 
     @Override
-    public @Nullable Integer getIDFromName(@NotNull String name) {
+    public @Nullable Integer getItemIDFromName(@NotNull String name) {
         switch (name) {
-            case "item.diamond_sword": return DIAMOND_SWORD;
-            case "item.coal": return COAL;
-            case "item.stick": return STICK;
-            case "item.iron_pickaxe": return IRON_PICKAXE;
-            case "block.iron": return BLOCK_IRON;
+            case "item.diamond_sword":
+                return DIAMOND_SWORD;
+            case "item.coal":
+                return COAL;
+            case "item.stick":
+                return STICK;
+            case "item.iron_pickaxe":
+                return IRON_PICKAXE;
+            case "block.iron":
+                return BLOCK_IRON;
         }
         return null;
     }
@@ -36,13 +42,20 @@ public final class FakeLocalized implements ILocalization {
     }
 
     @Override
-    public boolean supportsAttribute(@NotNull String attribute) {
-        return attribute.equals("displayName");
+    public String[] getCustomItemAttributes() {
+        return new String[]{"displayName"};
+    }
+
+    @Override
+    public void processCustomItemAttribute(@NotNull ItemDescription target, @NotNull String attribute, @Nullable Object value) {
+        if (attribute.equals("displayName")) {
+            target.setDisplayName((value instanceof String) ? ((String) value) : String.valueOf(value));
+        }
     }
 
     @Override
     public String[] getCustomRecipeTypes() {
-        return new String[] {
+        return new String[]{
                 "skibidi", "sigma"
         };
     }
