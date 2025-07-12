@@ -15,25 +15,28 @@ public final class FakeEnvironment implements IEnvironment {
     public static final int BLOCK_IRON = 5;
 
     @Override
-    public @Nullable Integer getItemIDFromName(@NotNull String name, int meta, int count) {
+    public @Nullable String getItemIDFromName(@NotNull String name, int meta, int count) {
         switch (name) {
             case "item.diamond_sword":
-                return DIAMOND_SWORD;
+                return String.valueOf(DIAMOND_SWORD);
             case "item.coal":
-                return COAL;
+                return String.valueOf(COAL);
             case "item.stick":
-                return STICK;
+                return String.valueOf(STICK);
             case "item.iron_pickaxe":
-                return IRON_PICKAXE;
+                return String.valueOf(IRON_PICKAXE);
             case "block.iron":
-                return BLOCK_IRON;
+                return String.valueOf(BLOCK_IRON);
         }
         return null;
     }
 
     @Override
-    public boolean isValidItemID(int id) {
-        return id > 0 && id < 256;
+    public @Nullable String getItemID(int id) {
+        if(id < 1 || id >= 256) {
+            return null;
+        }
+        return String.valueOf(id);
     }
 
     @Override

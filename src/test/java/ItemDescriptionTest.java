@@ -26,7 +26,7 @@ public class ItemDescriptionTest {
         }
 
         assertNotNull(description);
-        assertEquals(FakeEnvironment.DIAMOND_SWORD, description.getItemID());
+        assertEquals(String.valueOf(FakeEnvironment.DIAMOND_SWORD), description.getItemIdentifier());
         assertEquals(5, description.getMeta());
         assertEquals(32, description.getCount());
         assertEquals("Hello Sigma!", description.getDisplayName());
@@ -46,7 +46,7 @@ public class ItemDescriptionTest {
 
         assertNotNull(description);
         assertEquals("X", description.getKey());
-        assertEquals(FakeEnvironment.COAL, description.getItemID());
+        assertEquals(String.valueOf(FakeEnvironment.COAL), description.getItemIdentifier());
         assertEquals(0, description.getMeta());
         assertEquals(2, description.getCount());
         assertEquals("Asdfgh", description.getDisplayName());

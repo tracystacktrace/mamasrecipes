@@ -11,7 +11,7 @@ public class KeyedItemDescription extends ItemDescription {
     protected String recipeKeyIdentifier;
 
     protected KeyedItemDescription(ItemDescription description) {
-        super(description.itemID, description.count, description.meta);
+        super(description.itemIdentifier, description.count, description.meta);
         this.displayName = description.displayName;
     }
 

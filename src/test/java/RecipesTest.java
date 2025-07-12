@@ -36,7 +36,7 @@ public class RecipesTest {
 
         //item assert
         assertNotNull(recipe.getResult());
-        assertEquals(FakeEnvironment.DIAMOND_SWORD, recipe.getResult().getItemID());
+        assertEquals(String.valueOf(FakeEnvironment.DIAMOND_SWORD), recipe.getResult().getItemIdentifier());
         assertEquals("Diamond Giant Sword!", recipe.getResult().getDisplayName());
         assertEquals(1, recipe.getResult().getCount());
         assertEquals(0, recipe.getResult().getMeta());
@@ -61,12 +61,16 @@ public class RecipesTest {
 
         //assert keys (dumb way)
         assertNotNull(recipe.getInput());
-        assertTrue(recipe.getInput()[0].getItemID() == FakeEnvironment.BLOCK_IRON || recipe.getInput()[1].getItemID() == FakeEnvironment.BLOCK_IRON, "Block iron detected in input keys!");
-        assertTrue(recipe.getInput()[0].getItemID() == FakeEnvironment.STICK || recipe.getInput()[1].getItemID() == FakeEnvironment.STICK, "Item stick detected in input keys!");
+
+        final String blockIron = String.valueOf(FakeEnvironment.BLOCK_IRON);
+        final String stick = String.valueOf(FakeEnvironment.STICK);
+
+        assertTrue(blockIron.equals(recipe.getInput()[0].getItemIdentifier()) || blockIron.equals(recipe.getInput()[1].getItemIdentifier()) , "Block iron detected in input keys!");
+        assertTrue( stick.equals(recipe.getInput()[0].getItemIdentifier()) || stick.equals(recipe.getInput()[1].getItemIdentifier()), "Item stick detected in input keys!");
 
         //result assert
         assertNotNull(recipe.getResult());
-        assertEquals(FakeEnvironment.IRON_PICKAXE, recipe.getResult().getItemID());
+        assertEquals(String.valueOf(FakeEnvironment.IRON_PICKAXE), recipe.getResult().getItemIdentifier());
         assertEquals("Super Hammer", recipe.getResult().getDisplayName());
         assertEquals(1, recipe.getResult().getCount());
         assertEquals(25, recipe.getResult().getMeta());
@@ -90,14 +94,14 @@ public class RecipesTest {
 
         //input assert
         assertNotNull(recipe.getInput());
-        assertEquals(FakeEnvironment.COAL, recipe.getInput().getItemID());
+        assertEquals(String.valueOf(FakeEnvironment.COAL), recipe.getInput().getItemIdentifier());
         assertNull(recipe.getInput().getDisplayName());
         assertEquals(1, recipe.getInput().getCount());
         assertEquals(0, recipe.getInput().getMeta());
 
         //result assert
         assertNotNull(recipe.getResult());
-        assertEquals(FakeEnvironment.COAL, recipe.getResult().getItemID());
+        assertEquals(String.valueOf(FakeEnvironment.COAL), recipe.getResult().getItemIdentifier());
         assertEquals("Super Coal", recipe.getResult().getDisplayName());
         assertEquals(1, recipe.getResult().getCount());
         assertEquals(1, recipe.getResult().getMeta());

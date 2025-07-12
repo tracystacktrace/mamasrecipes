@@ -10,9 +10,9 @@ import org.jetbrains.annotations.Nullable;
 public interface IEnvironment {
     /* general handlers */
 
-    @Nullable Integer getItemIDFromName(@NotNull String name, int meta, int count);
+    @Nullable String getItemIDFromName(@NotNull String name, int meta, int count);
 
-    boolean isValidItemID(int id);
+    @Nullable String getItemID(int id);
 
     /* specific attributes */
 

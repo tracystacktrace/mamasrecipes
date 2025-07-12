@@ -10,19 +10,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemDescription {
-    protected final int itemID;
+    protected final String itemIdentifier;
     protected final int count;
     protected final int meta;
     protected String displayName;
 
-    protected ItemDescription(int itemID, int count, int meta) {
-        this.itemID = itemID;
+    protected ItemDescription(String itemIdentifier, int count, int meta) {
+        this.itemIdentifier = itemIdentifier;
         this.count = count;
         this.meta = meta;
     }
 
-    public int getItemID() {
-        return this.itemID;
+    public String getItemIdentifier() {
+        return this.itemIdentifier;
     }
 
     public int getMeta() {
@@ -78,7 +78,7 @@ public class ItemDescription {
         }
 
         //process item id/identifier
-        int build_itemID = Integer.MIN_VALUE;
+        String build_itemIdentifier = null;
 
         if (object.has("item")) {
             final JsonElement itemElement = object.get("item");
@@ -86,18 +86,19 @@ public class ItemDescription {
                 final JsonPrimitive itemPrimitive = itemElement.getAsJsonPrimitive();
                 if (itemPrimitive.isString()) {
                     final String value_iid = itemPrimitive.getAsString();
-                    final Integer processed_iid = environment.getItemIDFromName(value_iid, build_meta, build_count);
+                    final String processed_iid = environment.getItemIDFromName(value_iid, build_meta, build_count);
 
                     if (processed_iid != null) {
-                        build_itemID = processed_iid;
+                        build_itemIdentifier = processed_iid;
                     } else {
                         throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_ID, value_iid);
                     }
                 } else if (itemPrimitive.isNumber()) {
                     final int value_iid = itemPrimitive.getAsInt();
+                    final String processed_iid = environment.getItemID(value_iid);
 
-                    if (environment.isValidItemID(value_iid)) {
-                        build_itemID = value_iid;
+                    if (processed_iid != null) {
+                        build_itemIdentifier = processed_iid;
                     } else {
                         throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_ID, String.valueOf(value_iid));
                     }
@@ -105,12 +106,12 @@ public class ItemDescription {
             }
         }
 
-        if (build_itemID == Integer.MIN_VALUE) {
+        if (build_itemIdentifier == null) {
             throw new RecipeProcessException(RecipeProcessException.ITEM_IDENTIFIER_NOT_FOUND);
         }
 
         //generate item instance
-        final ItemDescription instance = new ItemDescription(build_itemID, build_count, build_meta);
+        final ItemDescription instance = new ItemDescription(build_itemIdentifier, build_count, build_meta);
 
         //process custom attributes, if found!
         final String[] customAttributes = environment.getCustomItemAttributes();
