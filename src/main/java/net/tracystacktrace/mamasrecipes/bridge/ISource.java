@@ -1,4 +1,4 @@
-package net.tracystacktrace.mamasrecipes.tools;
+package net.tracystacktrace.mamasrecipes.bridge;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
-import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
+import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeDirectProcessing;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeShaped;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeShapeless;
 import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
@@ -52,7 +52,7 @@ public final class RecipeReader {
                     return RecipeShapeless.fromJson(environment, object);
                 }
                 case "furnace": {
-                    return RecipeFurnace.fromJson(environment, object, "furnace");
+                    return RecipeDirectProcessing.fromJson(environment, object, "furnace");
                 }
                 default: {
                     IRecipeDescription description = environment.processCustomRecipe(typeExtracted, object);

@@ -3,7 +3,7 @@ import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.item.ItemDescription;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
-import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
+import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeDirectProcessing;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,6 +65,6 @@ public final class FakeEnvironment implements IEnvironment {
             @NotNull String type,
             @NotNull JsonObject object
     ) throws RecipeProcessException {
-        return RecipeFurnace.fromJson(this, object, "skibidi");
+        return RecipeDirectProcessing.fromJson(this, object, "skibidi");
     }
 }

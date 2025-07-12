@@ -11,36 +11,6 @@ import java.util.List;
 
 public final class SafeExtractor {
 
-    public static @Nullable Object extractSomething(@NotNull JsonElement element) {
-        //null values
-        if (element.isJsonNull()) {
-            return null;
-        }
-
-        //primitives
-        if (element.isJsonPrimitive()) {
-            final JsonPrimitive primitive = element.getAsJsonPrimitive();
-            if (primitive.isString())
-                return primitive.getAsString();
-            if (primitive.isBoolean())
-                return primitive.getAsBoolean();
-            if (primitive.isNumber())
-                return primitive.getAsNumber();
-        }
-
-        //json object
-        if (element.isJsonObject()) {
-            return element.getAsJsonObject();
-        }
-
-        //json array
-        if (element.isJsonArray()) {
-            return element.getAsJsonArray();
-        }
-
-        return null;
-    }
-
     public static @Nullable String extractString(@NotNull JsonElement element) {
         if (element.isJsonPrimitive()) {
             if (element.getAsJsonPrimitive().isString()) {
@@ -72,11 +42,42 @@ public final class SafeExtractor {
         return null;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean assertRecipeType(@NotNull JsonObject object, @NotNull String expected) {
         if (object.has("type")) {
             final JsonElement typeElement = object.get("type");
             return expected.equals(SafeExtractor.extractString(typeElement));
         }
         return false;
+    }
+
+    public static @Nullable Object extractSomething(@NotNull JsonElement element) {
+        //null values
+        if (element.isJsonNull()) {
+            return null;
+        }
+
+        //primitives
+        if (element.isJsonPrimitive()) {
+            final JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (primitive.isString())
+                return primitive.getAsString();
+            if (primitive.isBoolean())
+                return primitive.getAsBoolean();
+            if (primitive.isNumber())
+                return primitive.getAsNumber();
+        }
+
+        //json object
+        if (element.isJsonObject()) {
+            return element.getAsJsonObject();
+        }
+
+        //json array
+        if (element.isJsonArray()) {
+            return element.getAsJsonArray();
+        }
+
+        return null;
     }
 }

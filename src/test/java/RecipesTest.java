@@ -2,7 +2,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
-import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeFurnace;
+import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeDirectProcessing;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeShaped;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.RecipeShapeless;
 import org.junit.jupiter.api.Test;
@@ -77,9 +77,9 @@ public class RecipesTest {
         final String jsonString = "{\"type\":\"furnace\",\"name\":\"Test 1\",\"input\":{\"item\":\"item.coal\",\"meta\":0},\"result\":{\"item\":\"item.coal\",\"displayName\":\"Super Coal\",\"meta\":1}}";
         final JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
 
-        RecipeFurnace recipe;
+        RecipeDirectProcessing recipe;
         try {
-            recipe = RecipeFurnace.fromJson(ENVIRONMENT, jsonObject, "furnace");
+            recipe = RecipeDirectProcessing.fromJson(ENVIRONMENT, jsonObject, "furnace");
         } catch (RecipeProcessException e) {
             throw new RuntimeException(e);
         }

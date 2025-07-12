@@ -9,13 +9,13 @@ import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RecipeFurnace implements IRecipeDescription {
+public class RecipeDirectProcessing implements IRecipeDescription {
     protected final ItemDescription input;
     protected final ItemDescription output;
     protected final String type;
     protected String name;
 
-    public RecipeFurnace(
+    public RecipeDirectProcessing(
             ItemDescription input,
             ItemDescription output,
             String type
@@ -49,15 +49,11 @@ public class RecipeFurnace implements IRecipeDescription {
         return this.name;
     }
 
-    public static @NotNull RecipeFurnace fromJson(
+    public static @NotNull RecipeDirectProcessing fromJson(
             @NotNull IEnvironment environment,
             @NotNull JsonObject object,
-            @Nullable String type
+            @NotNull String type
     ) throws RecipeProcessException {
-        if (type == null || type.isEmpty()) {
-            type = "furnace"; //dumb protection
-        }
-
         //general checks
         if (!SafeExtractor.assertRecipeType(object, type)) {
             throw new RecipeProcessException(RecipeProcessException.INCORRECT_RECIPE_TYPE, object.has("type") ? object.get("type").toString() : null);
@@ -103,7 +99,7 @@ public class RecipeFurnace implements IRecipeDescription {
             throw new RecipeProcessException(RecipeProcessException.RECIPE_RESULT_NOT_FOUND);
         }
 
-        final RecipeFurnace instance = new RecipeFurnace(build_input, build_result, type);
+        final RecipeDirectProcessing instance = new RecipeDirectProcessing(build_input, build_result, type);
 
         //additional support for names, just for fun!
         if (object.has("name")) {

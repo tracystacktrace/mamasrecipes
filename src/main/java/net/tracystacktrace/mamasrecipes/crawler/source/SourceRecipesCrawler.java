@@ -8,7 +8,7 @@ import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
 import net.tracystacktrace.mamasrecipes.crawler.ICrawler;
 import net.tracystacktrace.mamasrecipes.tools.IOTools;
-import net.tracystacktrace.mamasrecipes.tools.ISource;
+import net.tracystacktrace.mamasrecipes.bridge.ISource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
