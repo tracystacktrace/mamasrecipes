@@ -1,6 +1,6 @@
 # Mama's Recipes
 
-[![](https://jitpack.io/v/tracystacktrace/mamasrecipes.svg)](https://jitpack.io/#tracystacktrace/mamasrecipes) [![GitHub tag](https://img.shields.io/github/tag/tracystacktrace/mamasrecipes?include_prereleases=&sort=semver&color=yellow)](https://github.com/tracystacktrace/mamasrecipes/releases/)
+[![](https://jitpack.io/v/tracystacktrace/mamasrecipes.svg)](https://jitpack.io/#tracystacktrace/mamasrecipes) [![GitHub tag](https://img.shields.io/github/tag/tracystacktrace/mamasrecipes?include_prereleases=&sort=semver&color=yellow&label=Tag)](https://github.com/tracystacktrace/mamasrecipes/releases/)
 [![License](https://img.shields.io/badge/License-GNU_LGPL_Version_2.1-yellow)](#license)
 
 A small library designed to provide a non-binding flexible recipes API for many minecraft mods and modloaders.
