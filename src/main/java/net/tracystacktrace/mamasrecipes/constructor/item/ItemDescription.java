@@ -9,11 +9,15 @@ import net.tracystacktrace.mamasrecipes.tools.SafeExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ItemDescription {
     protected final String itemIdentifier;
     protected final int count;
     protected final int meta;
     protected String displayName;
+    protected Map<String, Object> customAttributes;
 
     protected ItemDescription(String itemIdentifier, int count, int meta) {
         this.itemIdentifier = itemIdentifier;
@@ -39,6 +43,27 @@ public class ItemDescription {
 
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    public boolean hasCustomAttribute(@Nullable String name) {
+        if(name == null || this.customAttributes == null) {
+            return false;
+        }
+        return this.customAttributes.containsKey(name);
+    }
+
+    public @Nullable Object getCustomAttribute(@Nullable String attribute) {
+        if(attribute == null || attribute.isEmpty()) {
+            return null;
+        }
+        return this.customAttributes.get(attribute);
+    }
+
+    public void setCustomAttribute(@NotNull String attribute, @Nullable Object value) {
+        if(this.customAttributes == null) {
+            this.customAttributes = new HashMap<>();
+        }
+        this.customAttributes.put(attribute, value);
     }
 
     public static @NotNull ItemDescription fromJson(
