@@ -1,14 +1,15 @@
-package net.tracystacktrace.mamasrecipes.crawler.folder;
+package net.tracystacktrace.mamasrecipes.crawler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FolderCrawlerException extends Exception {
+public class CrawlerException extends Exception {
     public static final byte NOT_A_FOLDER = -128;
     public static final byte FOLDER_READ_FAILED = -127;
     public static final byte FILE_READ_FAILED = -126;
     public static final byte INVALID_JSON_FILE = -125;
     public static final byte RECIPE_PROCESS_FAILED = -124;
+    public static final byte FILES_ARRAY_NOT_PRESENT = -123;
 
     public static @NotNull String getErrorMessage(byte code, @Nullable String optional) {
         switch (code) {
@@ -28,11 +29,11 @@ public class FolderCrawlerException extends Exception {
         }
     }
 
-    public FolderCrawlerException(byte code, @Nullable String optional, @Nullable Exception e) {
+    public CrawlerException(byte code, @Nullable String optional, @Nullable Exception e) {
         super(getErrorMessage(code, optional), e);
     }
 
-    public FolderCrawlerException(byte code, @Nullable Exception e) {
+    public CrawlerException(byte code, @Nullable Exception e) {
         this(code, null, e);
     }
 }

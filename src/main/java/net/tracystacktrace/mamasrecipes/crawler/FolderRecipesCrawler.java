@@ -1,11 +1,10 @@
-package net.tracystacktrace.mamasrecipes.crawler.folder;
+package net.tracystacktrace.mamasrecipes.crawler;
 
 import com.google.gson.JsonObject;
 import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
-import net.tracystacktrace.mamasrecipes.crawler.ICrawler;
 import net.tracystacktrace.mamasrecipes.tools.IOTools;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,13 +39,13 @@ public class FolderRecipesCrawler implements ICrawler {
     public static @Nullable FolderRecipesCrawler fromFolder(
             @NotNull IEnvironment environment,
             @NotNull File file
-    ) throws FolderCrawlerException {
+    ) throws CrawlerException {
         if (!file.exists()) {
             file.mkdirs();
         }
 
         if (!file.isDirectory()) {
-            throw new FolderCrawlerException(FolderCrawlerException.NOT_A_FOLDER, file.getAbsolutePath(), null);
+            throw new CrawlerException(CrawlerException.NOT_A_FOLDER, file.getAbsolutePath(), null);
         }
 
         final List<Path> folderResult = collectJsonFiles(file);
@@ -56,30 +55,30 @@ public class FolderRecipesCrawler implements ICrawler {
             return null;
         }
 
-        List<IRecipeDescription> collector = new ArrayList<>();
+        final List<IRecipeDescription> collector = new ArrayList<>();
         for (Path path : folderResult) {
             final JsonObject content = IOTools.readJSON(path);
             try {
                 final IRecipeDescription description = RecipeReader.read(environment, content);
                 collector.add(description);
             } catch (RecipeProcessException e) {
-                throw new FolderCrawlerException(FolderCrawlerException.RECIPE_PROCESS_FAILED, path.toFile().getAbsolutePath(), e);
+                throw new CrawlerException(CrawlerException.RECIPE_PROCESS_FAILED, path.toFile().getAbsolutePath(), e);
             }
         }
 
-        System.out.println("Collected about " + collector.size() + " recipes in folder: " + file.getAbsolutePath());
+        System.out.println(String.format("Collected about %s recipes inside the folder: %s", collector.size(), file.getAbsolutePath()));
 
         return new FolderRecipesCrawler(file, collector);
     }
 
-    static @NotNull List<@NotNull Path> collectJsonFiles(@NotNull File folder) throws FolderCrawlerException {
+    static @NotNull List<@NotNull Path> collectJsonFiles(@NotNull File folder) throws CrawlerException {
         try (Stream<Path> paths = Files.walk(folder.toPath())) {
             return paths
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".json"))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new FolderCrawlerException(FolderCrawlerException.FOLDER_READ_FAILED, folder.getAbsolutePath(), e);
+            throw new CrawlerException(CrawlerException.FOLDER_READ_FAILED, folder.getAbsolutePath(), e);
         }
     }
 }

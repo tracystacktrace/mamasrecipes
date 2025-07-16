@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class SafeExtractor {
-
     public static @Nullable String extractString(@NotNull JsonElement element) {
         if (element.isJsonPrimitive()) {
             if (element.getAsJsonPrimitive().isString()) {

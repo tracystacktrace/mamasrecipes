@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public interface ICrawler {
-
     @Nullable List<IRecipeDescription> getRecipes();
 
     default void initializeRecipes(@NotNull IEnvironment environment) {
