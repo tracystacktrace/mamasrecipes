@@ -9,7 +9,5 @@ public interface IRecipeDescription {
 
     @NotNull ItemDescription getResult();
 
-    boolean hasName();
-
     @Nullable String getName();
 }

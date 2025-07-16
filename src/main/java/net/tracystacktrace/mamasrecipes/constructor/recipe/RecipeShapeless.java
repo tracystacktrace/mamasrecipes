@@ -15,6 +15,7 @@ import java.util.List;
 public class RecipeShapeless implements IRecipeDescription {
     protected final ItemDescription resultItem;
     protected final ItemDescription[] keys;
+
     protected String name;
 
     public RecipeShapeless(
@@ -25,7 +26,7 @@ public class RecipeShapeless implements IRecipeDescription {
         this.keys = keys;
     }
 
-    public ItemDescription[] getInput() {
+    public @NotNull ItemDescription @NotNull [] getInput() {
         return this.keys;
     }
 
@@ -37,11 +38,6 @@ public class RecipeShapeless implements IRecipeDescription {
     @Override
     public @NotNull ItemDescription getResult() {
         return this.resultItem;
-    }
-
-    @Override
-    public boolean hasName() {
-        return this.name != null;
     }
 
     @Override

@@ -13,6 +13,7 @@ public class RecipeDirectProcessing implements IRecipeDescription {
     protected final ItemDescription input;
     protected final ItemDescription output;
     protected final String type;
+
     protected String name;
 
     public RecipeDirectProcessing(
@@ -37,11 +38,6 @@ public class RecipeDirectProcessing implements IRecipeDescription {
     @Override
     public @NotNull ItemDescription getResult() {
         return this.output;
-    }
-
-    @Override
-    public boolean hasName() {
-        return this.name != null;
     }
 
     @Override

@@ -17,6 +17,7 @@ public class RecipeShaped implements IRecipeDescription {
     protected final String[] pattern;
     protected final Map<String, KeyedItemDescription> keys;
     protected final ItemDescription resultItem;
+
     protected String name;
 
     protected RecipeShaped(
@@ -45,11 +46,6 @@ public class RecipeShaped implements IRecipeDescription {
     @Override
     public @NotNull ItemDescription getResult() {
         return this.resultItem;
-    }
-
-    @Override
-    public boolean hasName() {
-        return this.name != null;
     }
 
     @Override

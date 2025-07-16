@@ -1,12 +1,13 @@
-package net.tracystacktrace.mamasrecipes.crawler;
+package net.tracystacktrace.mamasrecipes.crawler.impl;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.bridge.ISource;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
+import net.tracystacktrace.mamasrecipes.crawler.CrawlerException;
+import net.tracystacktrace.mamasrecipes.crawler.ICrawler;
 import net.tracystacktrace.mamasrecipes.tools.IOTools;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,32 +69,6 @@ public class RawSourceRecipesCrawler implements ICrawler {
         System.out.println(String.format("Collected about %s recipes in stream source: %s", collector.size(), source.getSourceName()));
 
         return new RawSourceRecipesCrawler(source.getSourceName(), collector);
-    }
-
-
-    static List<String> obtainRecipePaths(
-            @NotNull JsonObject object,
-            @NotNull String debugName
-    ) throws CrawlerException {
-        if (!object.has("files")) {
-            throw new CrawlerException(CrawlerException.FILES_ARRAY_NOT_PRESENT, debugName, null);
-        }
-
-        final JsonElement filesElement = object.get("files");
-
-        if (!filesElement.isJsonArray()) {
-            throw new CrawlerException(CrawlerException.INVALID_JSON_FILE, filesElement.toString(), null);
-        }
-
-        final List<String> collector = new ArrayList<>();
-
-        for (JsonElement candidate : filesElement.getAsJsonArray()) {
-            if (candidate.isJsonPrimitive() && candidate.getAsJsonPrimitive().isString()) {
-                collector.add(candidate.getAsString());
-            }
-        }
-
-        return collector;
     }
 
     static void close(@Nullable InputStream stream) {

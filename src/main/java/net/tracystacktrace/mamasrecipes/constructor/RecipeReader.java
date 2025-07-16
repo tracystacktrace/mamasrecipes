@@ -55,7 +55,7 @@ public final class RecipeReader {
                     return RecipeDirectProcessing.fromJson(environment, object, "furnace");
                 }
                 default: {
-                    IRecipeDescription description = environment.processCustomRecipe(typeExtracted, object);
+                    final IRecipeDescription description = environment.processCustomRecipe(typeExtracted, object);
                     if (description == null) {
                         throw new RecipeProcessException(RecipeProcessException.INCORRECT_RECIPE_TYPE, typeExtracted);
                     }

@@ -1,10 +1,12 @@
-package net.tracystacktrace.mamasrecipes.crawler;
+package net.tracystacktrace.mamasrecipes.crawler.impl;
 
 import com.google.gson.JsonObject;
 import net.tracystacktrace.mamasrecipes.bridge.IEnvironment;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeProcessException;
 import net.tracystacktrace.mamasrecipes.constructor.RecipeReader;
 import net.tracystacktrace.mamasrecipes.constructor.recipe.IRecipeDescription;
+import net.tracystacktrace.mamasrecipes.crawler.CrawlerException;
+import net.tracystacktrace.mamasrecipes.crawler.ICrawler;
 import net.tracystacktrace.mamasrecipes.tools.IOTools;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

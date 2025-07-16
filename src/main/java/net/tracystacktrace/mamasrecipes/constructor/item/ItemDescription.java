@@ -16,6 +16,7 @@ public class ItemDescription {
     protected final String itemIdentifier;
     protected final int count;
     protected final int meta;
+
     protected String displayName;
     protected Map<String, Object> customAttributes;
 
@@ -46,21 +47,21 @@ public class ItemDescription {
     }
 
     public boolean hasCustomAttribute(@Nullable String name) {
-        if(name == null || this.customAttributes == null) {
+        if (name == null || this.customAttributes == null) {
             return false;
         }
         return this.customAttributes.containsKey(name);
     }
 
     public @Nullable Object getCustomAttribute(@Nullable String attribute) {
-        if(attribute == null || attribute.isEmpty()) {
+        if (attribute == null || attribute.isEmpty() || this.customAttributes == null) {
             return null;
         }
         return this.customAttributes.get(attribute);
     }
 
     public void setCustomAttribute(@NotNull String attribute, @Nullable Object value) {
-        if(this.customAttributes == null) {
+        if (this.customAttributes == null) {
             this.customAttributes = new HashMap<>();
         }
         this.customAttributes.put(attribute, value);
@@ -151,18 +152,6 @@ public class ItemDescription {
                 }
             }
         }
-
-        //additional support for ReIndev's displayName
-//        if (object.has("displayName") && localizer.hasItemAttribute("displayName")) {
-//            final JsonElement dnElement = object.get("displayName");
-//            final String dnExtracted = SafeExtractor.extractString(dnElement);
-//
-//            if (dnExtracted != null) {
-//                instance.displayName = dnExtracted;
-//            } else {
-//                throw new RecipeProcessException(RecipeProcessException.INVALID_ITEM_DISPLAY_NAME, dnElement.toString());
-//            }
-//        }
 
         return instance;
     }

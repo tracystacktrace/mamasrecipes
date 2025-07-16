@@ -9,7 +9,6 @@ public class CrawlerException extends Exception {
     public static final byte FILE_READ_FAILED = -126;
     public static final byte INVALID_JSON_FILE = -125;
     public static final byte RECIPE_PROCESS_FAILED = -124;
-    public static final byte FILES_ARRAY_NOT_PRESENT = -123;
 
     public static @NotNull String getErrorMessage(byte code, @Nullable String optional) {
         switch (code) {
